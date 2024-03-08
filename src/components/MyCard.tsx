@@ -16,48 +16,48 @@ interface CardProps {
 }
 
 const MyCard: React.FC<CardProps> = ({id, name, official, height, weight, sprite, move}) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const imageContainerRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null)
+  const imageContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const card = cardRef.current;
-    const imageContainer = imageContainerRef.current;
+    const card = cardRef.current
+    const imageContainer = imageContainerRef.current
 
     const handleMouseMove = (e: MouseEvent) => {
       if (!card) return;
 
-      const { clientX, clientY } = e;
-      const { left, top, width, height } = card.getBoundingClientRect();
-      const centerX = left + width / 2;
-      const centerY = top + height / 2;
-      const posX = clientX - centerX;
-      const posY = clientY - centerY;
-      const rotateX = (posY / height) * 30;
-      const rotateY = (posX / width) * -30;
+      const { clientX, clientY } = e
+      const { left, top, width, height } = card.getBoundingClientRect()
+      const centerX = left + width / 2
+      const centerY = top + height / 2
+      const posX = clientX - centerX
+      const posY = clientY - centerY
+      const rotateX = (posY / height) * 30
+      const rotateY = (posX / width) * -30
 
-      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`
 
-      const scaleAmount = 1.08;
+      const scaleAmount = 1.08
       if (imageContainer) {
-        imageContainer.style.transform = `scale(${scaleAmount}) translateZ(50px)`;
+        imageContainer.style.transform = `scale(${scaleAmount}) translateZ(50px)`
       }
     };
 
     const handleMouseLeave = () => {
       if (card) {
-        card.style.transform = "rotateX(0) rotateY(0)";
+        card.style.transform = "rotateX(0) rotateY(0)"
       }
       if (imageContainer) {
-        imageContainer.style.transform = "scale(1) translateZ(0px)";
+        imageContainer.style.transform = "scale(1) translateZ(0px)"
       }
     };
 
-    card?.addEventListener("mousemove", handleMouseMove);
-    card?.addEventListener("mouseleave", handleMouseLeave);
+    card?.addEventListener("mousemove", handleMouseMove)
+    card?.addEventListener("mouseleave", handleMouseLeave)
 
     return () => {
-      card?.removeEventListener("mousemove", handleMouseMove);
-      card?.removeEventListener("mouseleave", handleMouseLeave);
+      card?.removeEventListener("mousemove", handleMouseMove)
+      card?.removeEventListener("mouseleave", handleMouseLeave)
     };
   }, []);
 

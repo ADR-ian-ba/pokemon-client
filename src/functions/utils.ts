@@ -15,11 +15,11 @@ interface PokemonData {
 }
 
 export const fetchData = async (currentId: number): Promise<PokemonData[]> => {
-  const pokemons: PokemonData[] = [];
+  const pokemons: PokemonData[] = []
 
   for (let i = currentId; i < currentId + 5; i++) {
     try {
-      const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${i}`);
+      const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${i}`)
       const moves: Move[] = res.data.moves.map((each: any) => ({
         name: each.move.name
       }));
@@ -31,14 +31,14 @@ export const fetchData = async (currentId: number): Promise<PokemonData[]> => {
         weight: res.data.weight,
         official: res.data.sprites.other['official-artwork'].front_default,
         sprite: res.data.sprites.front_default,
-        move: moves, // Assign the moves array here
+        move: moves, 
       };
-      pokemons.push(pokemonData); 
+      pokemons.push(pokemonData)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
   }
 
-  return pokemons; 
+  return pokemons
 };
 

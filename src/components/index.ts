@@ -1,3 +1,4 @@
 import MyCard from "./MyCard";
+import Footer from "./Footer";
 
-export {MyCard}
+export {MyCard, Footer}

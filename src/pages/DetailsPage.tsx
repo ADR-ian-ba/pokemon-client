@@ -1,6 +1,6 @@
-import { Card, CardContent, Typography, Box } from '@mui/material';
+import { Card, CardContent, Typography,} from '@mui/material';
 import { decompressFromEncodedURIComponent } from 'lz-string';
-import React from 'react';
+import { Footer } from '../components';
 
 const DetailsPage = () => {
     const params = new URLSearchParams(window.location.search);
@@ -10,10 +10,11 @@ const DetailsPage = () => {
     const weight = params.get('weight');
 
     // Assuming decompressFromEncodedURIComponent is needed; otherwise, directly use params.get('...').
-    const move = decompressFromEncodedURIComponent(params.get('move'));
+    const moveDecompressed = decompressFromEncodedURIComponent(params.get('move'));
     const official = decompressFromEncodedURIComponent(params.get('official'));
     const sprite = decompressFromEncodedURIComponent(params.get('sprite'));
 
+    const move = JSON.parse(moveDecompressed)
     return (
         <div>
 
@@ -35,10 +36,11 @@ const DetailsPage = () => {
                   sx={{
                     marginBottom: "1rem"
                   }}>
-                  <img src={official} alt="" style={{objectFit:"cover", width:"100%"}} />
+                  <img src={official} alt="" style={{objectFit:"contain", width:"100%", maxHeight: "200px", maxWidth:"200px"}} />
                 </Card>
+
                 <Card variant='outlined'>
-                  <img src={sprite} alt="" style={{objectFit:"cover", width:"100%"}}/>
+                  <img src={sprite} alt="" style={{objectFit:"contain", width:"100%", maxHeight: "200px", maxWidth:"200px"}}/>
                 </Card>
               </CardContent>
 
@@ -47,20 +49,46 @@ const DetailsPage = () => {
                   height:"100%",
                   padding: "1rem",
                 }}>
-                  <p>PokedexId : {id}</p>
-                  <p>PokedexId : {id}</p>
-                  <p>PokedexId : {id}</p>
+                  <Typography variant="h5" className="p-details">PokedexId : {id}</Typography>
+                  <Typography variant="h5" className="p-details">Height : {height}</Typography>
+                  <Typography variant="h5" className="p-details">Weight : {weight}</Typography>
 
-                  <p>Move :</p>
+                  <Typography variant="h5" className="p-details">Move : </Typography>
+
+                  <div className="move-wrapper">
+
+                  {move.map((each, index) => (
+                    <Card 
+                      key={index}
+                      sx={{
+                        marginBottom: "1rem",
+                        height: "2rem",
+                        display: "flex", 
+                        alignItems: "center", 
+                        justifyContent: "center", 
+                      }}
+                      variant="outlined"
+                    >
+                      <Typography variant="body2" component="div">
+                        {each.name}
+                      </Typography>
+                    </Card>
+                  ))}
+                  </div>
                 </Card>
               </CardContent>
             </div>
 
 
 
+
+
             </Card>
+              {/* <button onClick={()=> console.log(move[0].name)}>tets</button> */}
+              <Footer/>
         </div>
     );
 };
 
 export default DetailsPage;
+

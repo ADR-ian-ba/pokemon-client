@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { fetchData } from '../functions/utils';
 import { Typography } from '@mui/material';
-import { MyCard } from '../components';
+import { Footer, MyCard } from '../components';
+
 
 interface Move {
   name: string; 
@@ -18,90 +19,86 @@ interface Pokemon {
 }
 
 const HomePage = () => {
-  const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
-  const [translateX, setTranslateX] = useState(0);
-  const [startX, setStartX] = useState(0); // Start position of a touch/mouse down event
+  const [pokemonList, setPokemonList] = useState<Pokemon[]>([])
+  const [translateX, setTranslateX] = useState(0)
+  const [startX, setStartX] = useState(0);
   const [isDragging, setIsDragging] = useState(false)
-  const wrapperRef = useRef<HTMLDivElement>(null); // Ref for the card-wrapper
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
   const getMaxTranslateX = () => {
     if (wrapperRef.current) {
-      const { scrollWidth, offsetWidth } = wrapperRef.current;
-      return Math.min(0, offsetWidth - scrollWidth);
+      const { scrollWidth, offsetWidth } = wrapperRef.current
+      return Math.min(0, offsetWidth - scrollWidth)
     }
-    return 0;
+    return 0
   };
 
-  const handleDragStart = (e:unknown) => {
-    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+  const handleDragStart = (e:any) => {
+    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX
+    setStartX(clientX)
+    setIsDragging(true)
+  };
+
+
+  const handleDragMove = (e:any) => {
+    if (!isDragging) return
+    e.preventDefault()
+    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX
+    const moveX = clientX - startX
+
+    setTranslateX(currentTranslateX  => {
+      const maxTranslateX = getMaxTranslateX()
+      const newTranslateX = currentTranslateX + moveX
+      return Math.min(0, Math.max(newTranslateX, maxTranslateX))
+    })
+
     setStartX(clientX);
-    setIsDragging(true);
-  };
+  }
 
-  // Touch/Mouse move handler
-  const handleDragMove = (e:unknown) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-    const moveX = clientX - startX;
 
-    setTranslateX(currentTranslateX => {
-      const maxTranslateX = getMaxTranslateX();
-      const newTranslateX = currentTranslateX + moveX;
-      return Math.min(0, Math.max(newTranslateX, maxTranslateX));
-    });
-
-    setStartX(clientX);
-  };
-
-  // Touch/Mouse up handler
   const handleDragEnd = async () => {
     setIsDragging(false);
-  };
-  // Fetch initial data
+  }
   useEffect(() => {
-    const currentId = pokemonList.length + 1;
+    const currentId = pokemonList.length + 1
 
     const getPokemon = async () => {
       if (pokemonList.length === 0) {
-        const res = await fetchData(currentId);
-        setPokemonList((prevList) => [...prevList, ...res]);
+        const res = await fetchData(currentId)
+        setPokemonList((prevList:any) => [...prevList, ...res])
       }
-    };
+    }
 
     getPokemon();
-  }, [pokemonList.length]);
+  }, [pokemonList.length])
 
-  // Handle left arrow click
+
   const handleLeftClick = () => {
-    // Prevent translating too far left if already at start
     if (translateX < 0) {
-      setTranslateX(currentTranslateX => Math.min(currentTranslateX + 400, 0));
+      setTranslateX(currentTranslateX => Math.min(currentTranslateX + 400, 0))
     }
-  };
+  }
 
-  // Handle right arrow click
   const handleRightClick = async () => {
     if (wrapperRef.current) {
       const { scrollWidth, offsetWidth } = wrapperRef.current;
-      const isCloseToEnd = Math.abs(translateX) + offsetWidth > scrollWidth - 400; // Check if near the end
+      const isCloseToEnd = Math.abs(translateX) + offsetWidth > scrollWidth - 400
 
       if (isCloseToEnd) {
         await fetchData(pokemonList.length + 1).then(newPokemon => {
-          setPokemonList(prevList => [...prevList, ...newPokemon]);
-        });
+          setPokemonList(prevList => [...prevList, ...newPokemon])
+        })
       }
 
-      // Update translation only if not at the end
       if (!isCloseToEnd || (isCloseToEnd && pokemonList.length % 20 === 0)) {
-        setTranslateX(currentTranslateX => currentTranslateX - 400);
+        setTranslateX(currentTranslateX => currentTranslateX - 400)
       }
     }
-  };
+  }
 
   return (
     <div>
-      <Typography sx={{ marginBottom: '5rem' }} variant="h4">
+      <Typography sx={{ marginBottom: '1rem' }} variant="h4">
         List Pokemon
       </Typography>
       <div 
@@ -149,7 +146,8 @@ const HomePage = () => {
         </div>
       </div>
 
-      <button onClick={()=> console.log(pokemonList)}>test</button>
+      {/* <button onClick={()=> console.log(pokemonList)}>test</button> */}
+      <Footer/>
     </div>
   );
 };

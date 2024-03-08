@@ -14,6 +14,10 @@
     --primary-color: rgb(24, 116, 255);
 }
 
+body{
+    overflow-x: hidden ;
+}
+
 .card-tilt{
     min-width: 20rem;
     width: 100%;
@@ -97,7 +101,7 @@
         margin : 1rem 2rem;
         cursor: pointer;
         padding: 1rem;
-        padding-top: 60vh;
+        padding-top: 70vh;
     }
 
     .card-wrapper{
@@ -109,3 +113,55 @@
         transition: all 200ms cubic-bezier(.47,.55,.57,.54);
     }
 }
+
+.p-details{
+    text-align: left;
+    font-size: large;
+}
+
+.move-wrapper{
+    overflow-y: scroll;
+    max-height: 16.6rem;
+    padding: 1rem;
+}
+
+.move-wrapper::-webkit-scrollbar-track {
+    background-color: #f0f0f0; 
+  }
+  
+
+  .move-wrapper::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px; 
+    border: 3px solid #f0f0f0; 
+  }
+  
+  .move-wrapper::-webkit-scrollbar {
+    width: 8px; 
+  }
+
+
+  .footer {
+    background-color: var(--primary-color);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 3rem;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 1rem;
+
+    p, svg {
+        display: inline;
+        margin: 0; 
+      }
+
+      svg{
+        height: 40px;
+      }
+  }
+  
+
+  
