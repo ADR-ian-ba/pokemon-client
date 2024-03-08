@@ -9,6 +9,11 @@
           user-select: none;
 }
 
+#root {
+  margin: 0;
+  padding: 0;
+}
+
 :root {
   --white-color: #ffffff;
   --gray-color: gray;
@@ -131,15 +136,13 @@ body {
 
 .footer {
   background-color: var(--primary-color);
-  position: absolute;
-  bottom: 0;
-  left: 0;
   width: 100vw;
   height: 3rem;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1rem;
+  margin-top: 10rem;
 }
 .footer p, .footer svg {
   display: inline;
@@ -147,4 +150,10 @@ body {
 }
 .footer svg {
   height: 40px;
+}
+
+.home-page {
+  height: 200vh;
+  width: 100vw;
+  overflow: none;
 }/*# sourceMappingURL=style.css.map */

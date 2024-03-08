@@ -21,9 +21,8 @@ const DetailsPage = () => {
             <Card variant='outlined' sx={{
               padding:"1rem"
             }}>
-            <Typography variant="h4">
-            {name} Details
-            </Typography>
+
+            <Typography variant="h4">{name} Details</Typography>
 
             <div className="wrapper" style={{
               display:"grid",
@@ -49,15 +48,14 @@ const DetailsPage = () => {
                   height:"100%",
                   padding: "1rem",
                 }}>
+
                   <Typography variant="h5" className="p-details">PokedexId : {id}</Typography>
                   <Typography variant="h5" className="p-details">Height : {height}</Typography>
                   <Typography variant="h5" className="p-details">Weight : {weight}</Typography>
-
                   <Typography variant="h5" className="p-details">Move : </Typography>
 
                   <div className="move-wrapper">
-
-                  {move.map((each, index) => (
+                  {move.map((each:any, index:any) => (
                     <Card 
                       key={index}
                       sx={{
@@ -67,15 +65,18 @@ const DetailsPage = () => {
                         alignItems: "center", 
                         justifyContent: "center", 
                       }}
-                      variant="outlined"
-                    >
+                      variant="outlined">
+
                       <Typography variant="body2" component="div">
                         {each.name}
                       </Typography>
+
                     </Card>
                   ))}
+
                   </div>
                 </Card>
+                
               </CardContent>
             </div>
 

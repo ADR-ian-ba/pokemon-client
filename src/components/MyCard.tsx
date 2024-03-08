@@ -1,5 +1,6 @@
+//not used
 import { compressToEncodedURIComponent } from "lz-string";
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 
 interface Move{
   name: string
