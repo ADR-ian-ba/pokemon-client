@@ -6,6 +6,7 @@ import { compressToEncodedURIComponent } from 'lz-string';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../state/store';
 import { add } from '../state/pokemon/pokemonSlice';
+import { useNavigate } from 'react-router-dom';
 
 
 const RevisedHome = () => {
@@ -13,6 +14,7 @@ const RevisedHome = () => {
 
   const manyPokemon = useSelector((state: RootState) => state.pokemon.pokemonList) 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   //initial data seeding
   useEffect(() => {
@@ -50,14 +52,14 @@ const RevisedHome = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isLoading, manyPokemon.length]);
 
-  const redirect = (each)=>{
+  const redirect = (each) => {
     const dataString = JSON.stringify(each.move);
-    const compressMove = compressToEncodedURIComponent(dataString)
-    const compressOfficial = compressToEncodedURIComponent(each.official)
-    const compressSprite = compressToEncodedURIComponent(each.sprite)
-    window.location.href = `http://localhost:5173/details?id=${each.id}&name=${each.name}&height=${each.height}&weight=${each.weight}&official=${compressOfficial}&sprite=${compressSprite}&move=${compressMove}`
-  }
-
+    const compressMove = compressToEncodedURIComponent(dataString);
+    const compressOfficial = compressToEncodedURIComponent(each.official);
+    const compressSprite = compressToEncodedURIComponent(each.sprite);
+    
+    navigate(`/details?id=${each.id}&name=${each.name}&height=${each.height}&weight=${each.weight}&official=${compressOfficial}&sprite=${compressSprite}&move=${compressMove}`);
+  };
   return (
     <div className="home-page">
       <Typography
