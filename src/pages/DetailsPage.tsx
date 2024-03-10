@@ -9,17 +9,19 @@ const DetailsPage = () => {
     const height = params.get('height');
     const weight = params.get('weight');
 
-    // Assuming decompressFromEncodedURIComponent is needed; otherwise, directly use params.get('...').
+
     const moveDecompressed = decompressFromEncodedURIComponent(params.get('move'));
     const official = decompressFromEncodedURIComponent(params.get('official'));
     const sprite = decompressFromEncodedURIComponent(params.get('sprite'));
 
     const move = JSON.parse(moveDecompressed)
     return (
-        <div>
+        <div className='details-page'>
 
             <Card variant='outlined' sx={{
-              padding:"1rem"
+              margin: "1rem auto",
+              padding: "1rem",
+              maxWidth: "70%",
             }}>
 
             <Typography variant="h4">{name} Details</Typography>

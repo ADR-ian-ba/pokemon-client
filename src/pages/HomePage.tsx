@@ -35,14 +35,14 @@ const HomePage = () => {
     return 0
   };
 
-  const handleDragStart = (e:any) => {
+  const handleDragStart = (e:unknown) => {
     const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX
     setStartX(clientX)
     setIsDragging(true)
   };
 
 
-  const handleDragMove = (e:any) => {
+  const handleDragMove = (e:unknown) => {
     if (!isDragging) return
     e.preventDefault()
     const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX
@@ -67,7 +67,7 @@ const HomePage = () => {
     const getPokemon = async () => {
       if (pokemonList.length === 0) {
         const res = await fetchData(currentId)
-        setPokemonList((prevList:any) => [...prevList, ...res])
+        setPokemonList((prevList:unknown) => [...prevList, ...res])
       }
     }
 

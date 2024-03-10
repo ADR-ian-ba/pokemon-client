@@ -143,6 +143,9 @@ body {
   align-items: center;
   gap: 1rem;
   margin-top: 10rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 .footer p, .footer svg {
   display: inline;
@@ -153,7 +156,13 @@ body {
 }
 
 .home-page {
-  height: 200vh;
   width: 100vw;
   overflow: none;
+  position: relative;
+}
+
+.details-page {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
 }/*# sourceMappingURL=style.css.map */
