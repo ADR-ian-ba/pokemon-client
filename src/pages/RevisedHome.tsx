@@ -3,40 +3,31 @@ import { Card, CardMedia, Typography } from '@mui/material';
 import { fetchData } from '../functions/utils';
 import { Footer } from '../components';
 import { compressToEncodedURIComponent } from 'lz-string';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../state/store';
+import { add } from '../state/pokemon/pokemonSlice';
 
-
-interface Move {
-  name: string;
-}
-
-interface Pokemon {
-  id: number;
-  name: string;
-  height: number;
-  weight: number;
-  official: string;
-  sprite: string;
-  move: Move[];
-}
 
 const RevisedHome = () => {
-  const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const manyPokemon = useSelector((state: RootState) => state.pokemon.pokemonList) 
+  const dispatch = useDispatch()
 
   //initial data seeding
   useEffect(() => {
     const getPokemon = async () => {
-      if (pokemonList.length === 0 && !isLoading) {
+      if (manyPokemon.length === 0 && !isLoading) {
         setIsLoading(true);
-        const res = await fetchData(pokemonList.length + 1);
-        setPokemonList((prevList) => [...prevList, ...res]);
+        const res = await fetchData(manyPokemon.length + 1);
         setIsLoading(false);
+        dispatch(add(res))
       }
     };
 
     getPokemon();
     getPokemon();
-  }, [pokemonList.length, isLoading]);
+  }, [manyPokemon.length, isLoading]);
 
   
   //infinite scrolling
@@ -50,16 +41,16 @@ const RevisedHome = () => {
         return;
 
       setIsLoading(true); 
-      const res = await fetchData(pokemonList.length + 1);
-      setPokemonList((prevList) => [...prevList, ...res]);
+      const res = await fetchData(manyPokemon.length + 1);
       setIsLoading(false);
+      dispatch(add(res))
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isLoading, pokemonList.length]);
+  }, [isLoading, manyPokemon.length]);
 
-  const redirect = (each:Pokemon)=>{
+  const redirect = (each)=>{
     const dataString = JSON.stringify(each.move);
     const compressMove = compressToEncodedURIComponent(dataString)
     const compressOfficial = compressToEncodedURIComponent(each.official)
@@ -90,7 +81,7 @@ const RevisedHome = () => {
           paddingBottom:'10rem'
         }}
       >
-        {pokemonList.map((each, index) => (
+        {manyPokemon.map((each, index) => (
           <div
             key={index}
             className="card-wrapper"

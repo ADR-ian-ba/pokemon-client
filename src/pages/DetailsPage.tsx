@@ -1,6 +1,7 @@
 import { Card, CardContent, Typography,} from '@mui/material';
 import { decompressFromEncodedURIComponent } from 'lz-string';
 import { Footer } from '../components';
+import { Link } from 'react-router-dom';
 
 const DetailsPage = () => {
     const params = new URLSearchParams(window.location.search);
@@ -88,6 +89,7 @@ const DetailsPage = () => {
 
             </Card>
               {/* <button onClick={()=> console.log(move[0].name)}>tets</button> */}
+              <Link to='/'>Back</Link>
               <Footer/>
         </div>
     );
