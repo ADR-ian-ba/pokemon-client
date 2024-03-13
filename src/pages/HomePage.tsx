@@ -7,7 +7,7 @@ import { RootState } from '../state/store';
 import { add } from '../state/pokemon/pokemonSlice';
 import { useNavigate } from 'react-router-dom';
 import IPokemon from '../interfaces/IPokemon';
-//comment
+
 
 const RevisedHome = () => {
   const [isLoading, setIsLoading] = useState(false);
