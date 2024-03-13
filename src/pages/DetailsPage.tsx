@@ -61,7 +61,7 @@ const DetailsPage = () => {
                 </Card>
 
                 <Card variant='outlined'>
-                  {/* <img src={sprite} alt="" style={{objectFit:"contain", width:"100%", maxHeight: "200px", maxWidth:"200px"}}/> */}
+                  <img src={pokemonDetails.sprite} alt="" style={{objectFit:"contain", width:"100%", maxHeight: "200px", maxWidth:"200px"}}/>
                 </Card>
               </CardContent>
 

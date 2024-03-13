@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../state/store';
 import { add } from '../state/pokemon/pokemonSlice';
 import { useNavigate } from 'react-router-dom';
+import IPokemon from '../interfaces/IPokemon';
 
 
 const RevisedHome = () => {
@@ -50,7 +51,7 @@ const RevisedHome = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isLoading, pokemonList.length]);
 
-  const redirect = (each) => {
+  const redirect = (each: IPokemon) => {
     navigate(`/details?id=${each.id}`);
   };
   return (
