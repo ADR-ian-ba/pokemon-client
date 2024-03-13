@@ -1,37 +1,19 @@
+
 import axios from 'axios';
+import IPokemon from '../interfaces/IPokemon';
 
-interface Move {
-  name: string; 
-}
 
-interface PokemonData {
-  id: number;
-  name: string;
-  height: number;
-  weight: number;
-  official: string;
-  sprite: string;
-  move: Move[]
-}
-
-export const fetchData = async (currentId: number): Promise<PokemonData[]> => {
-  const pokemons: PokemonData[] = []
+export const fetchData = async (currentId: number): Promise<IPokemon[]> => {
+  const pokemons: IPokemon[] = []
 
   for (let i = currentId; i < currentId + 20; i++) {
     try {
       const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${i}`)
-      const moves: Move[] = res.data.moves.map((each: any) => ({
-        name: each.move.name
-      }));
 
-      const pokemonData: PokemonData = {
+      const pokemonData: IPokemon = {
         id: res.data.id,
         name: res.data.name,
-        height: res.data.height,
-        weight: res.data.weight,
-        official: res.data.sprites.other['official-artwork'].front_default,
-        sprite: res.data.sprites.front_default,
-        move: moves, 
+        image: res.data.sprites.other['official-artwork'].front_default,
       };
       pokemons.push(pokemonData)
     } catch (error) {
@@ -41,4 +23,6 @@ export const fetchData = async (currentId: number): Promise<PokemonData[]> => {
 
   return pokemons
 };
+
+
 

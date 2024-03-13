@@ -1,9 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import IPokemonDetail from "../../interfaces/IPokemonDetail";
+import IPokemon from "../../interfaces/IPokemon";
 
 
 interface PokemonState {
-    pokemonList: IPokemonDetail[];
+    pokemonList: IPokemon[];
   }
 
 const initialState : PokemonState = {
@@ -14,7 +14,7 @@ const pokemonSlice = createSlice ({
     name: "pokemon",
     initialState,
     reducers:{
-        add: (state, action: PayloadAction<IPokemonDetail[]>) => {
+        add: (state, action: PayloadAction<IPokemon[]>) => {
             state.pokemonList.push(...action.payload)
         }
     }

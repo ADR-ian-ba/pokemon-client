@@ -3,7 +3,6 @@ interface Move {
   }
   
 export default interface IPokemonDetail {
-    id: number;
     name: string;
     height: number;
     weight: number;

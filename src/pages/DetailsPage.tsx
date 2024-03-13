@@ -1,21 +1,40 @@
 import { Card, CardContent, Typography,} from '@mui/material';
-import { decompressFromEncodedURIComponent } from 'lz-string';
-import { Footer } from '../components';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import IPokemonDetail from '../interfaces/IPokemonDetail';
 
 const DetailsPage = () => {
+    const [pokemonDetails, setPokemonDetails] = useState<IPokemonDetail | null>(null);    
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
-    const name = params.get('name');
-    const height = params.get('height');
-    const weight = params.get('weight');
 
+    useEffect(()=>{
+      const fetchData = async ()=> {
+        const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
+        const moves = res.data.moves.map((each:any)=>({
+          name: each.move.name
+        }))
 
-    const moveDecompressed = decompressFromEncodedURIComponent(params.get('move'));
-    const official = decompressFromEncodedURIComponent(params.get('official'));
-    const sprite = decompressFromEncodedURIComponent(params.get('sprite'));
+        const pokemonDetails: IPokemonDetail = {
+          name: res.data.name,
+          height: res.data.height,
+          weight: res.data.weight,
+          official: res.data.sprites.other['official-artwork'].front_default,
+          sprite: res.data.sprites.front_default,
+          move: moves, 
+        }
+        console.log(res)
+        setPokemonDetails(pokemonDetails)
+      }
 
-    const move = JSON.parse(moveDecompressed)
+      fetchData()
+    })
+
+    if (!pokemonDetails) {
+      return <Typography>Loading...</Typography>;
+    }
+
     return (
         <div className='details-page'>
 
@@ -25,7 +44,7 @@ const DetailsPage = () => {
               maxWidth: "70%",
             }}>
 
-            <Typography variant="h4">{name} Details</Typography>
+            <Typography variant="h4">{pokemonDetails.name} Details</Typography>
 
             <div className="wrapper" style={{
               display:"grid",
@@ -38,11 +57,11 @@ const DetailsPage = () => {
                   sx={{
                     marginBottom: "1rem"
                   }}>
-                  <img src={official} alt="" style={{objectFit:"contain", width:"100%", maxHeight: "200px", maxWidth:"200px"}} />
+                  <img src={pokemonDetails.official} alt="" style={{objectFit:"contain", width:"100%", maxHeight: "200px", maxWidth:"200px"}} />
                 </Card>
 
                 <Card variant='outlined'>
-                  <img src={sprite} alt="" style={{objectFit:"contain", width:"100%", maxHeight: "200px", maxWidth:"200px"}}/>
+                  {/* <img src={sprite} alt="" style={{objectFit:"contain", width:"100%", maxHeight: "200px", maxWidth:"200px"}}/> */}
                 </Card>
               </CardContent>
 
@@ -53,12 +72,12 @@ const DetailsPage = () => {
                 }}>
 
                   <Typography variant="h5" className="p-details">PokedexId : {id}</Typography>
-                  <Typography variant="h5" className="p-details">Height : {height}</Typography>
-                  <Typography variant="h5" className="p-details">Weight : {weight}</Typography>
+                  <Typography variant="h5" className="p-details">Height : {pokemonDetails.height}</Typography>
+                  <Typography variant="h5" className="p-details">Weight : {pokemonDetails.weight}</Typography>
                   <Typography variant="h5" className="p-details">Move : </Typography>
 
                   <div className="move-wrapper">
-                  {move.map((each:any, index:any) => (
+                  {pokemonDetails.move.map((each:any, index:any) => (
                     <Card 
                       key={index}
                       sx={{
@@ -89,8 +108,7 @@ const DetailsPage = () => {
 
             </Card>
               {/* <button onClick={()=> console.log(move[0].name)}>tets</button> */}
-              <Link to='/'>Back</Link>
-              <Footer/>
+              <Link to='/' style={{paddingBottom: "5rem"}}>Back</Link>
         </div>
     );
 };
