@@ -1,22 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-
-interface Move {
-    name: string;
-}
-  
-interface Pokemon {
-    id: number;
-    name: string;
-    height: number;
-    weight: number;
-    official: string;
-    sprite: string;
-    move: Move[];
-}
+import IPokemonDetail from "../../interfaces/IPokemonDetail";
 
 
 interface PokemonState {
-    pokemonList: Pokemon[];
+    pokemonList: IPokemonDetail[];
   }
 
 const initialState : PokemonState = {
@@ -27,7 +14,7 @@ const pokemonSlice = createSlice ({
     name: "pokemon",
     initialState,
     reducers:{
-        add: (state, action: PayloadAction<Pokemon[]>) => {
+        add: (state, action: PayloadAction<IPokemonDetail[]>) => {
             state.pokemonList.push(...action.payload)
         }
     }

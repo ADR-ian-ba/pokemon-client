@@ -1,157 +1,125 @@
-//not used
-
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
+import { Card, CardMedia, Typography } from '@mui/material';
 import { fetchData } from '../functions/utils';
-import { Typography } from '@mui/material';
-import { Footer, MyCard } from '../components';
+import { Footer } from '../components';
+import { compressToEncodedURIComponent } from 'lz-string';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../state/store';
+import { add } from '../state/pokemon/pokemonSlice';
+import { useNavigate } from 'react-router-dom';
 
 
-interface Move {
-  name: string; 
-}
+const RevisedHome = () => {
+  const [isLoading, setIsLoading] = useState(false);
 
-interface Pokemon {
-  id: number;
-  name: string;
-  height: number;
-  weight: number;
-  official: string;
-  sprite: string;
-  move: Move[]
-}
+  const manyPokemon = useSelector((state: RootState) => state.pokemon.pokemonList) 
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-const HomePage = () => {
-  const [pokemonList, setPokemonList] = useState<Pokemon[]>([])
-  const [translateX, setTranslateX] = useState(0)
-  const [startX, setStartX] = useState(0);
-  const [isDragging, setIsDragging] = useState(false)
-  const wrapperRef = useRef<HTMLDivElement>(null)
-
-  const getMaxTranslateX = () => {
-    if (wrapperRef.current) {
-      const { scrollWidth, offsetWidth } = wrapperRef.current
-      return Math.min(0, offsetWidth - scrollWidth)
-    }
-    return 0
-  };
-
-  const handleDragStart = (e:unknown) => {
-    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX
-    setStartX(clientX)
-    setIsDragging(true)
-  };
-
-
-  const handleDragMove = (e:unknown) => {
-    if (!isDragging) return
-    e.preventDefault()
-    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX
-    const moveX = clientX - startX
-
-    setTranslateX(currentTranslateX  => {
-      const maxTranslateX = getMaxTranslateX()
-      const newTranslateX = currentTranslateX + moveX
-      return Math.min(0, Math.max(newTranslateX, maxTranslateX))
-    })
-
-    setStartX(clientX);
-  }
-
-
-  const handleDragEnd = async () => {
-    setIsDragging(false);
-  }
+  //initial data seeding
   useEffect(() => {
-    const currentId = pokemonList.length + 1
-
     const getPokemon = async () => {
-      if (pokemonList.length === 0) {
-        const res = await fetchData(currentId)
-        setPokemonList((prevList:unknown) => [...prevList, ...res])
+      if (manyPokemon.length === 0 && !isLoading) {
+        setIsLoading(true);
+        const res = await fetchData(manyPokemon.length + 1);
+        setIsLoading(false);
+        dispatch(add(res))
       }
-    }
+    };
 
     getPokemon();
-  }, [pokemonList.length])
+  }, [manyPokemon.length, isLoading]);
 
+  
+  //infinite scrolling
+  useEffect(() => {
+    const handleScroll = async () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop !==
+          document.documentElement.offsetHeight ||
+        isLoading
+      )
+        return;
 
-  const handleLeftClick = () => {
-    if (translateX < 0) {
-      setTranslateX(currentTranslateX => Math.min(currentTranslateX + 400, 0))
-    }
-  }
+      setIsLoading(true); 
+      const res = await fetchData(manyPokemon.length + 1);
+      setIsLoading(false);
+      dispatch(add(res))
+    };
 
-  const handleRightClick = async () => {
-    if (wrapperRef.current) {
-      const { scrollWidth, offsetWidth } = wrapperRef.current;
-      const isCloseToEnd = Math.abs(translateX) + offsetWidth > scrollWidth - 400
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isLoading, manyPokemon.length]);
 
-      if (isCloseToEnd) {
-        await fetchData(pokemonList.length + 1).then(newPokemon => {
-          setPokemonList(prevList => [...prevList, ...newPokemon])
-        })
-      }
-
-      if (!isCloseToEnd || (isCloseToEnd && pokemonList.length % 20 === 0)) {
-        setTranslateX(currentTranslateX => currentTranslateX - 400)
-      }
-    }
-  }
-
+  const redirect = (each) => {
+    const dataString = JSON.stringify(each.move);
+    const compressMove = compressToEncodedURIComponent(dataString);
+    const compressOfficial = compressToEncodedURIComponent(each.official);
+    const compressSprite = compressToEncodedURIComponent(each.sprite);
+    
+    navigate(`/details?id=${each.id}&name=${each.name}&height=${each.height}&weight=${each.weight}&official=${compressOfficial}&sprite=${compressSprite}&move=${compressMove}`);
+  };
   return (
-    <div>
-      <Typography sx={{ marginBottom: '1rem' }} variant="h4">
+    <div className="home-page">
+      <Typography
+        sx={{ margin: '0 auto', marginBottom: '1rem', width: 'fit-content' }}
+        variant="h4"
+      >
         List Pokemon
       </Typography>
-      <div 
-      className="slider"
-      onMouseDown={handleDragStart}
-      onTouchStart={handleDragStart}
-      onMouseMove={handleDragMove}
-      onTouchMove={handleDragMove}
-      onMouseUp={handleDragEnd}
-      onMouseLeave={handleDragEnd} 
-      onTouchEnd={handleDragEnd}>
-        <div
-          className="card-wrapper"
-          ref={wrapperRef}
-          style={{ transform: `translateX(${translateX}px)` }}
-        >
-          {pokemonList.map((each, index) => (
-            <MyCard move={each.move} key={index} sprite={each.sprite} id={each.id} height={each.height} weight={each.weight} name={each.name} official={each.official} />
-          ))}
-        </div>
 
-        <div>
-          <svg
-            onClick={handleLeftClick}
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="chevron"
+      <div
+        className="cards-wrapper"
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '1rem',
+          margin: '0 auto',
+          width: '100vw',
+          padding: '2rem',
+          paddingBottom:'10rem'
+        }}
+      >
+        {manyPokemon.map((each, index) => (
+          <div
+            key={index}
+            className="card-wrapper"
+            style={{
+              maxWidth: '15rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '.5rem',
+            }}
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-          </svg>
-          <svg
-            onClick={handleRightClick}
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="chevron"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-          </svg>
-        </div>
+            <Card variant="outlined">
+              <CardMedia
+                component="img"
+                height="10%"
+                image={each.official}
+              />
+            </Card>
+            <Card
+              onClick={() => redirect(each)}
+              variant="outlined"
+              sx={{
+                height: '2rem',
+                display: 'flex',
+                alignItems: 'center',
+                placeContent: 'center',
+                cursor: 'pointer',
+              }}
+            >
+              {each.name}
+            </Card>
+          </div>
+        ))}
       </div>
 
-      {/* <button onClick={()=> console.log(pokemonList)}>test</button> */}
-      <Footer/>
+      <Footer />
     </div>
   );
 };
 
-export default HomePage;
+export default RevisedHome;
