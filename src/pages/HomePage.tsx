@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card, CardMedia, Typography } from '@mui/material';
-import { fetchData } from '../functions/utils';
+import { fetchData, fetchInitial } from '../functions/utils';
 import { Footer } from '../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../state/store';
@@ -21,14 +21,14 @@ const RevisedHome = () => {
     const getPokemon = async () => {
       if (pokemonList.length === 0 && !isLoading) {
         setIsLoading(true);
-        const res = await fetchData(pokemonList.length + 1);
+        const res = await fetchInitial();
         setIsLoading(false);
         dispatch(add(res))
       }
     };
 
     getPokemon();
-  }, [pokemonList.length, isLoading]);
+  }, [pokemonList.length, isLoading, dispatch]);
 
   
   //infinite scrolling
@@ -77,7 +77,7 @@ const RevisedHome = () => {
           paddingBottom:'10rem'
         }}
       >
-        {pokemonList.map((each, index) => (
+        {pokemonList.map((each:IPokemon, index:number) => (
           <div
             key={index}
             className="card-wrapper"
