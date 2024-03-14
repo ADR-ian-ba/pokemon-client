@@ -1,3 +1,10 @@
+# ENV
+```
+VITE_BASE_URL = "https://pokeapi.co/api/v2/pokemon/"
+
+```
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
