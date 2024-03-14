@@ -11,7 +11,7 @@ const DetailsPage = () => {
 
     useEffect(()=>{
       const fetchData = async ()=> {
-        const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
+        const res = await axios.get(import.meta.env.VITE_BASE_URL + id)
         const moves = res.data.moves.map((each:any)=>({
           name: each.move.name
         }))

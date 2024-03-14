@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import IPokemon from '../interfaces/IPokemon';
 
@@ -8,7 +7,7 @@ export const fetchData = async (currentId: number): Promise<IPokemon[]> => {
 
   for (let i = currentId; i < currentId + 20; i++) {
     try {
-      const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${i}`)
+      const res = await axios.get(import.meta.env.VITE_BASE_URL + i)
 
       const pokemonData: IPokemon = {
         id: res.data.id,
