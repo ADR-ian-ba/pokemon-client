@@ -29,7 +29,7 @@ const DetailsPage = () => {
       }
 
       fetchData()
-    })
+    },[id])
 
     if (!pokemonDetails) {
       return <Typography>Loading...</Typography>;
