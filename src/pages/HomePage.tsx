@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card, CardMedia, Typography } from '@mui/material';
-import { fetchData } from '../functions/utils';
+import { fetchData, fetchDataHEHE } from '../functions/utils';
 import { Footer } from '../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../state/store';
@@ -42,7 +42,7 @@ const RevisedHome = () => {
         return;
 
       setIsLoading(true); 
-      const res = await fetchData(pokemonList.length + 1);
+      const res = await fetchDataHEHE(pokemonList.length + 1);
       setIsLoading(false);
       dispatch(add(res))
     };
